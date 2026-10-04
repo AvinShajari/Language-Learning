@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ lesson.title }} — Lingua</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: #f6f8fc;
+            color: #172033;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* HEADER */
+
+        header {
+            height: 75px;
+            padding: 0 7%;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            background: white;
+            border-bottom: 1px solid #e8ebf2;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 24px;
+            font-weight: 900;
+            color: #315efb;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #315efb,
+                #7548ff
+            );
+
+            color: white;
+        }
+
+        .back {
+            color: #667085;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            color: #315efb;
+        }
+
+        /* MAIN */
+
+        .page {
+            max-width: 1100px;
+            margin: auto;
+            padding: 55px 25px 80px;
+        }
+
+        .lesson-header {
+            margin-bottom: 35px;
+        }
+
+        .label {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            background: #edf1ff;
+            color: #315efb;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 42px;
+            letter-spacing: -1.5px;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #737d91;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        /* CONTENT */
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 25px;
+        }
+
+        .content-card,
+        .ai-card {
+            background: white;
+            border: 1px solid #e7eaf1;
+            border-radius: 22px;
+            box-shadow: 0 15px 45px rgba(30, 45, 90, .06);
+        }
+
+        .content-card {
+            padding: 35px;
+        }
+
+        .content-card h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .lesson-content {
+            color: #4d5668;
+            line-height: 1.9;
+            font-size: 16px;
+            white-space: pre-line;
+        }
+
+        /* AI */
+
+        .ai-card {
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 95px;
+        }
+
+        .ai-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 15px;
+        }
+
+        .ai-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #edf1ff;
+
+            font-size: 21px;
+        }
+
+        .ai-title h3 {
+            font-size: 18px;
+        }
+
+        .ai-card p {
+            color: #737d91;
+            font-size: 14px;
+            line-height: 1.7;
+
+            margin-bottom: 20px;
+        }
+
+        .ai-button {
+            display: block;
+
+            width: 100%;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            background: linear-gradient(
+                135deg,
+                #315efb,
+                #7548ff
+            );
+
+            color: white;
+
+            text-align: center;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        .ai-button:hover {
+            opacity: .92;
+            transform: translateY(-1px);
+        }
+
+        /* PROGRESS */
+
+        .progress-box {
+            margin-top: 25px;
+
+            padding: 20px;
+
+            background: #f7f9fd;
+
+            border-radius: 16px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+
+            background: #e5e9f2;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+
+            width: {% if progress.completed %}100{% else %}0{% endif %}%;
+
+            background: linear-gradient(
+                90deg,
+                #315efb,
+                #7548ff
+            );
+        }
+
+        /* ACTIONS */
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .nav-button {
+            display: inline-block;
+
+            padding: 13px 20px;
+
+            border-radius: 12px;
+
+            border: 1px solid #dfe4ed;
+
+            background: white;
+
+            color: #394357;
+
+            font-weight: 700;
+
+            transition: .2s ease;
+        }
+
+        .nav-button:hover {
+            border-color: #315efb;
+            color: #315efb;
+        }
+
+        .complete-button {
+            display: inline-block;
+
+            padding: 14px 24px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #315efb;
+
+            color: white;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        .complete-button:hover {
+            opacity: .92;
+            transform: translateY(-1px);
+        }
+
+        .completed {
+            background: #16a34a;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 800px) {
+
+            header {
+                padding: 0 5%;
+            }
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .ai-card {
+                position: static;
+            }
+
+            h1 {
+                font-size: 34px;
+            }
+
+            .content-card {
+                padding: 25px;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .actions > div {
+                width: 100%;
+            }
+
+            .nav-button,
+            .complete-button {
+                text-align: center;
+                display: block;
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <a href="{% url 'home' %}" class="logo">
+
+        <div class="logo-icon">
+            L
+        </div>
+
+        Lingua
+
+    </a>
+
+
+    <a
+        href="{% url 'course_detail' lesson.course.pk %}"
+        class="back"
+    >
+        ← Back to Course
+    </a>
+
+</header>
+
+
+
+<main class="page">
+
+
+    <!-- LESSON HEADER -->
+
+    <div class="lesson-header">
+
+        <div class="label">
+            {{ lesson.course.level.name }}
+        </div>
+
+        <h1>
+            {{ lesson.title }}
+        </h1>
+
+        {% if lesson.description %}
+
+            <p class="description">
+                {{ lesson.description }}
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <div class="layout">
+
+
+        <!-- LESSON CONTENT -->
+
+        <div>
+
+            <div class="content-card">
+
+                <h2>
+                    Lesson
+                </h2>
+
+
+                <div class="lesson-content">
+                    {{ lesson.content }}
+                </div>
+
+
+
+                <!-- PROGRESS -->
+
+                <div class="progress-box">
+
+                    <div class="progress-top">
+
+                        <span>
+                            Lesson Progress
+                        </span>
+
+                        <span>
+
+                            {% if progress.completed %}
+
+                                Completed ✓
+
+                            {% else %}
+
+                                In progress
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-bar">
+
+                        <div class="progress-fill"></div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTIONS -->
+
+                <div class="actions">
+
+
+                    <!-- PREVIOUS LESSON -->
+
+                    <div>
+
+                        {% if previous_lesson %}
+
+                            <a
+                                href="{% url 'lesson_detail' previous_lesson.pk %}"
+                                class="nav-button"
+                            >
+                                ← Previous
+                            </a>
+
+                        {% endif %}
+
+                    </div>
+
+
+
+                    <!-- COMPLETE / NEXT -->
+
+                    <div>
+
+                        {% if not progress.completed %}
+
+                            <form
+                                method="post"
+                                action="{% url 'complete_lesson' lesson.pk %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="complete-button"
+                                >
+                                    Mark as Complete ✓
+                                </button>
+
+                            </form>
+
+                        {% else %}
+
+                            {% if next_lesson %}
+
+                                <a
+                                    href="{% url 'lesson_detail' next_lesson.pk %}"
+                                    class="complete-button"
+                                >
+                                    Next Lesson →
+                                </a>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'course_detail' lesson.course.pk %}"
+                                    class="complete-button completed"
+                                >
+                                    Course Completed ✓
+                                </a>
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- AI TUTOR -->
+
+        <aside class="ai-card">
+
+
+            <div class="ai-title">
+
+                <div class="ai-icon">
+                    🤖
+                </div>
+
+                <h3>
+                    Lingua AI Tutor
+                </h3>
+
+            </div>
+
+
+            <p>
+
+                Need help with this lesson?
+
+                Ask the AI tutor to explain vocabulary,
+                grammar, examples, or anything you don't
+                understand.
+
+            </p>
+
+
+            <!-- CONNECTED AI TUTOR -->
+
+            <a
+                href="{% url 'ai_tutor' %}?lesson={{ lesson.pk }}"
+                class="ai-button"
+            >
+                🤖 Ask AI Tutor
+            </a>
+
+
+        </aside>
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

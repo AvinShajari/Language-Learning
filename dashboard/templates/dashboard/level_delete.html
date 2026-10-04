@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Level</title>
+</head>
+
+<body>
+
+<h2>Delete "{{ level.name }}"?</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <button type="submit">
+        Delete
+    </button>
+
+    <a href="{% url 'level_list' %}">
+        Cancel
+    </a>
+
+</form>
+
+</body>
+</html>

@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard | Lingua</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --purple: #7c3aed;
+            --text: #0f172a;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           LAYOUT
+        ========================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 25px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 20;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 5px 10px 28px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 21px;
+            font-weight: 800;
+            box-shadow: 0 8px 20px rgba(79,70,229,.25);
+        }
+
+        .brand-name {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .brand-name span {
+            color: var(--primary);
+        }
+
+        .section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            font-weight: 800;
+            padding: 0 12px;
+            margin: 15px 0 9px;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 13px;
+            border-radius: 12px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            transition: .2s;
+        }
+
+        .nav a:hover {
+            background: #f1f5f9;
+            color: var(--primary);
+            transform: translateX(2px);
+        }
+
+        .nav a.active {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            width: 22px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        /* =========================
+           PROFILE
+        ========================== */
+
+        .sidebar-bottom {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 20px;
+        }
+
+        .profile-box {
+            padding: 13px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: #e0e7ff;
+            color: var(--primary);
+            font-weight: 800;
+        }
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================== */
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .welcome h1 {
+            margin: 0;
+            font-size: 29px;
+            letter-spacing: -1px;
+        }
+
+        .welcome p {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .site-button {
+            padding: 11px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .site-button:hover {
+            border-color: #c7d2fe;
+            color: var(--primary);
+        }
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 19px;
+            padding: 20px;
+            transition: .2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(15,23,42,.07);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #eef2ff;
+            font-size: 19px;
+        }
+
+        .stat-label {
+            margin-top: 17px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           CONTENT
+        ========================== */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 22px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 21px;
+            padding: 23px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .panel-link {
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           COURSE CARD
+        ========================== */
+
+        .course-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px;
+            border: 1px solid #edf0f5;
+            border-radius: 17px;
+            background: #fafbff;
+            transition: .25s;
+        }
+
+        .course-card:hover {
+            border-color: #c7d2fe;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(79,70,229,.08);
+        }
+
+        .course-cover {
+            width: 78px;
+            height: 78px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #7c3aed
+            );
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .course-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .course-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .course-level {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 9px;
+            background: #eef2ff;
+            color: var(--primary);
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .course-description {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .course-action {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            border-radius: 11px;
+            background: white;
+            border: 1px solid var(--border);
+            display: grid;
+            place-items: center;
+            color: var(--primary);
+            font-size: 17px;
+            transition: .2s;
+        }
+
+        .course-card:hover .course-action {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px 15px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* =========================
+           QUICK ACTIONS
+        ========================== */
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .action {
+            padding: 17px 14px;
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            transition: .2s;
+        }
+
+        .action:hover {
+            background: #eef2ff;
+            border-color: #c7d2fe;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            font-size: 18px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1050px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 75px;
+                padding: 20px 10px;
+            }
+
+            .brand {
+                justify-content: center;
+                padding-bottom: 25px;
+            }
+
+            .brand-name,
+            .section-title,
+            .nav span:not(.nav-icon),
+            .profile-info {
+                display: none;
+            }
+
+            .nav a {
+                justify-content: center;
+                padding: 13px;
+            }
+
+            .sidebar-bottom {
+                left: 10px;
+                right: 10px;
+            }
+
+            .profile-box {
+                padding: 8px;
+            }
+
+            .profile {
+                justify-content: center;
+            }
+
+            .main {
+                margin-left: 75px;
+                width: calc(100% - 75px);
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .main {
+                padding: 17px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .welcome h1 {
+                font-size: 23px;
+            }
+
+            .site-button {
+                display: none;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 23px;
+            }
+
+            .panel {
+                padding: 17px;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .course-cover {
+                width: 62px;
+                height: 62px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <a href="{% url 'dashboard' %}" class="brand">
+
+            <div class="brand-icon">
+                L
+            </div>
+
+            <div class="brand-name">
+                Ling<span>ua</span>
+            </div>
+
+        </a>
+
+
+        <div class="section-title">
+            Management
+        </div>
+
+
+        <nav class="nav">
+
+            <a href="{% url 'dashboard' %}" class="active">
+                <span class="nav-icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="{% url 'language_list' %}">
+                <span class="nav-icon">🌍</span>
+                <span>Languages</span>
+            </a>
+
+            <a href="{% url 'level_list' %}">
+                <span class="nav-icon">📚</span>
+                <span>Levels</span>
+            </a>
+
+            <a href="{% url 'course_list' %}">
+                <span class="nav-icon">🎓</span>
+                <span>Courses</span>
+            </a>
+
+            <a href="{% url 'lesson_list' %}">
+                <span class="nav-icon">📖</span>
+                <span>Lessons</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="profile-box">
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        {{ request.user.username|first|upper }}
+                    </div>
+
+                    <div class="profile-info">
+
+                        <div class="profile-name">
+                            {{ request.user.username }}
+                        </div>
+
+                        <div class="profile-role">
+                            Academy Manager
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="welcome">
+
+                <h1>Dashboard</h1>
+
+                <p>
+                    Manage your language academy and learning content.
+                </p>
+
+            </div>
+
+
+            <a href="/" class="site-button" target="_blank">
+                🌐 View Website
+            </a>
+
+        </div>
+
+
+        <!-- STATISTICS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🌍
+                </div>
+
+                <div class="stat-label">
+                    Languages
+                </div>
+
+                <div class="stat-number">
+                    {{ languages_count }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div class="stat-label">
+                    Levels
+                </div>
+
+                <div class="stat-number">
+                    {{ levels_count }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🎓
+                </div>
+
+                <div class="stat-label">
+                    Courses
+                </div>
+
+                <div class="stat-number">
+                    {{ courses_count }}
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📖
+                </div>
+
+                <div class="stat-label">
+                    Lessons
+                </div>
+
+                <div class="stat-number">
+                    {{ lessons_count }}
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENT -->
+
+        <div class="content-grid">
+
+
+            <!-- RECENT COURSES -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-title">
+                        Recent Courses
+                    </div>
+
+                    <a
+                        href="{% url 'course_list' %}"
+                        class="panel-link"
+                    >
+                        View all →
+                    </a>
+
+                </div>
+
+
+                {% if recent_courses %}
+
+                    {% for course in recent_courses %}
+
+                        <a
+                            href="{% url 'course_edit' course.id %}"
+                            class="course-card"
+                        >
+
+                            <div class="course-cover">
+
+                                {% if course.image %}
+
+                                    <img
+                                        src="{{ course.image.url }}"
+                                        alt="{{ course.title }}"
+                                    >
+
+                                {% else %}
+
+                                    🎓
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="course-info">
+
+                                <div class="course-title">
+                                    {{ course.title }}
+                                </div>
+
+
+                                <div class="course-level">
+
+                                    🌍
+
+                                    {{ course.level.language.name }}
+
+                                    ·
+
+                                    {{ course.level.name }}
+
+                                </div>
+
+
+                                {% if course.description %}
+
+                                    <div class="course-description">
+                                        {{ course.description }}
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="course-action">
+                                →
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty">
+
+                        <div style="font-size:38px; margin-bottom:10px;">
+                            🎓
+                        </div>
+
+                        <div>
+                            No courses yet.
+                        </div>
+
+                        <a
+                            href="{% url 'course_create' %}"
+                            style="
+                                display:inline-block;
+                                margin-top:12px;
+                                color:#4f46e5;
+                                font-weight:700;
+                            "
+                        >
+                            Create your first course →
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <section class="panel">
+
+                <div class="panel-header">
+
+                    <div class="panel-title">
+                        Quick Actions
+                    </div>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <a
+                        href="{% url 'language_create' %}"
+                        class="action"
+                    >
+                        <span class="action-icon">🌍</span>
+                        <span>Add Language</span>
+                    </a>
+
+
+                    <a
+                        href="{% url 'level_create' %}"
+                        class="action"
+                    >
+                        <span class="action-icon">📚</span>
+                        <span>Add Level</span>
+                    </a>
+
+
+                    <a
+                        href="{% url 'course_create' %}"
+                        class="action"
+                    >
+                        <span class="action-icon">🎓</span>
+                        <span>Add Course</span>
+                    </a>
+
+
+                    <a
+                        href="{% url 'lesson_create' %}"
+                        class="action"
+                    >
+                        <span class="action-icon">📖</span>
+                        <span>Add Lesson</span>
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+</html>

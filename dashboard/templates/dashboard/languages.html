@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Languages | Lingua</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            padding: 40px 24px;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .top p {
+            color: #64748b;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .back {
+            background: white;
+            color: #334155;
+            border: 1px solid #e2e8f0;
+            margin-right: 8px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 18px 22px;
+            text-align: left;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        th {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .flag {
+            font-size: 25px;
+        }
+
+        .actions a {
+            margin-right: 12px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .edit {
+            color: #4f46e5;
+        }
+
+        .delete {
+            color: #dc2626;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="top">
+        <div>
+            <h1>Languages 🌍</h1>
+            <p>Manage the languages available in your academy.</p>
+        </div>
+
+        <div>
+            <a href="/manager/" class="btn back">Dashboard</a>
+            <a href="{% url 'language_create' %}" class="btn primary">
+                + Add Language
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Language</th>
+                    <th>Code</th>
+                    <th>Flag</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for language in languages %}
+
+                <tr>
+                    <td><strong>{{ language.name }}</strong></td>
+                    <td>{{ language.code }}</td>
+                    <td class="flag">{{ language.flag }}</td>
+
+                    <td class="actions">
+                        <a
+                            href="{% url 'language_edit' language.pk %}"
+                            class="edit"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'language_delete' language.pk %}"
+                            class="delete"
+                        >
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="4">
+                        No languages added yet.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

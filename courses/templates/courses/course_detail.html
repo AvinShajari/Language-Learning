@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ course.title }} | Lingua</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f8fc;
+            color: #202033;
+        }
+
+        header {
+            background: white;
+            padding: 20px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: #5b5ce2;
+            font-size: 25px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        header a {
+            text-decoration: none;
+            color: #555;
+            margin-left: 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #5b5ce2, #7c5cff);
+            color: white;
+            padding: 70px 7%;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            margin-bottom: 15px;
+        }
+
+        .container {
+            width: 86%;
+            max-width: 1100px;
+            margin: 50px auto;
+        }
+
+        .course-box {
+            background: white;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 12px 40px rgba(0,0,0,.07);
+            margin-bottom: 30px;
+        }
+
+        .course-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: cover;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 12px;
+            background: #5b5ce2;
+            color: white;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .lesson {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .lesson a {
+            color: #5b5ce2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .notice {
+            padding: 15px;
+            background: #fff7df;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <a href="/" class="logo">
+        Lingua
+    </a>
+
+    <div>
+
+        {% if user.is_authenticated %}
+
+            <a href="{% url 'my_courses' %}">
+                My Courses
+            </a>
+
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+            <a href="{% url 'signup' %}">
+                Sign Up
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+
+
+<section class="hero">
+
+    <h1>
+        {{ course.title }}
+    </h1>
+
+    <p>
+        {{ course.level.language.name }}
+        ·
+        {{ course.level.name }}
+    </p>
+
+</section>
+
+
+<div class="container">
+
+    <div class="course-box">
+
+        {% if course.image %}
+
+            <img
+                class="course-image"
+                src="{{ course.image.url }}"
+                alt="{{ course.title }}"
+            >
+
+        {% endif %}
+
+        <h2>
+            About this course
+        </h2>
+
+        <p>
+            {{ course.description }}
+        </p>
+
+        {% if not user.is_authenticated %}
+
+            <div class="notice">
+                Login or create an account to start learning.
+            </div>
+
+            <a
+                class="button"
+                href="{% url 'login' %}?next={{ request.path }}"
+            >
+                Login to Start
+            </a>
+
+        {% elif not enrolled %}
+
+            <form
+                method="post"
+                action="{% url 'enroll_course' course.pk %}"
+            >
+
+                {% csrf_token %}
+
+                <button class="button" type="submit">
+                    Start Learning
+                </button>
+
+            </form>
+
+        {% else %}
+
+            {% with first_lesson=course.lessons.first %}
+
+                {% if first_lesson %}
+
+                    <a
+                        class="button"
+                        href="{% url 'lesson_detail' first_lesson.pk %}"
+                    >
+                        Continue Learning →
+                    </a>
+
+                {% endif %}
+
+            {% endwith %}
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="course-box">
+
+        <h2>
+            Course Lessons
+        </h2>
+
+        {% for lesson in course.lessons.all %}
+
+            <div class="lesson">
+
+                <div>
+                    <strong>
+                        Lesson {{ lesson.order }}
+                    </strong>
+
+                    <br>
+
+                    {{ lesson.title }}
+                </div>
+
+                {% if enrolled %}
+
+                    <a href="{% url 'lesson_detail' lesson.pk %}">
+                        Open →
+                    </a>
+
+                {% else %}
+
+                    <span>
+                        🔒
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                No lessons have been added yet.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
